@@ -1,17 +1,7 @@
-/*
- * Author: Add group details here
- * Desc: This file contains the heart of dynamic game play for Zombies. 
- *       you need to implement each of the methods, as per the game play,
- *       adding support for processing commands comming from the client.
- */
-package zombiestarter;
+package net.novucs.zombieserver;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * @author your details
- */
 
 /**
  * class that implements the ZombieBot interface and plays the game
@@ -74,18 +64,17 @@ public class ZombieBot implements world.ZombieBot {
     }
 
     /**
-     * process player commands
+     * Process commands sent by the player.
      *
-     * @param cmd to be processed
-     * @return output to be displayed
+     * @param command the command to be processed.
+     * @return the output to be displayed.
      */
     @Override
-    public List<String> processCmd(String cmd) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> processCmd(String command) {
+        String[] args = command.split("\\s");
+        List<String> result = new ArrayList<>();
 
-        String[] cmds = cmd.split(" "); // split cmd by space
-
-        switch (cmds[0]) {
+        switch (args[0]) {
             case "info":
                 result.add("handle info command");
                 break;
