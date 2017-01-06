@@ -11,11 +11,11 @@ public class World {
     private final String inventoryHtml;
     private final ImmutableList<ItemType> items;
     private final ImmutableList<Room> rooms;
-    private final String start;
-    private final String finish;
+    private final Room start;
+    private final Room finish;
 
     public World(String info, String startHtml, String inventoryHtml, ImmutableList<ItemType> items,
-                 ImmutableList<Room> rooms, String start, String finish) {
+                 ImmutableList<Room> rooms, Room start, Room finish) {
         this.info = info;
         this.startHtml = startHtml;
         this.inventoryHtml = inventoryHtml;
@@ -45,11 +45,11 @@ public class World {
         return rooms;
     }
 
-    public String getStart() {
+    public Room getStart() {
         return start;
     }
 
-    public String getFinish() {
+    public Room getFinish() {
         return finish;
     }
 

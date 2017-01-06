@@ -10,6 +10,9 @@ import com.sk89q.intake.util.auth.AuthorizationException;
 import net.novucs.zombieserver.command.Bindings;
 import net.novucs.zombieserver.command.CommandExecutor;
 import net.novucs.zombieserver.command.CommandResult;
+import net.novucs.zombieserver.level.Room;
+import net.novucs.zombieserver.level.World;
+import net.novucs.zombieserver.level.generator.WorldGenerator;
 import net.novucs.zombieserver.network.ConnectionManager;
 
 import java.util.List;
@@ -23,15 +26,21 @@ import java.util.List;
 public class GameManager {
 
     private final Dispatcher commandDispatcher;
+    private final World world;
+    private Room currentRoom;
     private GameState state = GameState.START;
 
-    private GameManager(Dispatcher commandDispatcher) {
+    private GameManager(Dispatcher commandDispatcher, World world, Room currentRoom) {
         this.commandDispatcher = commandDispatcher;
+        this.world = world;
+        this.currentRoom = currentRoom;
     }
 
     public static GameManager create() {
+        WorldGenerator generator = new WorldGenerator();
+        World world = generator.generate();
         Dispatcher commandDispatcher = new SimpleDispatcher();
-        GameManager game = new GameManager(commandDispatcher);
+        GameManager game = new GameManager(commandDispatcher, world, world.getStart());
 
         // Use the parametric builder to construct CommandCallable objects from annotations.
         ParametricBuilder builder = new ParametricBuilder();

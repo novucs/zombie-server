@@ -10,6 +10,10 @@ public class Item {
         this.item = item;
     }
 
+    public static Item of(ItemType itemType) {
+        return new Item(itemType.getName());
+    }
+
     public String getItem() {
         return item;
     }

@@ -6,11 +6,12 @@ public class Entrance {
 
     private final Direction direction;
     private final Room to;
-    private boolean locked = false;
+    private boolean locked;
 
-    public Entrance(Direction direction, Room to) {
+    public Entrance(Direction direction, Room to, boolean locked) {
         this.direction = direction;
         this.to = to;
+        this.locked = locked;
     }
 
     public Direction getDirection() {

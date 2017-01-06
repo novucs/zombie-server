@@ -1,7 +1,5 @@
 package net.novucs.zombieserver.level;
 
-import com.google.common.collect.ImmutableList;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -9,11 +7,11 @@ public class Room {
 
     private final String name;
     private final String description;
-    private final ImmutableList<Entrance> entrances;
+    private final List<Entrance> entrances;
     private final List<Item> items;
     private int zombies;
 
-    public Room(String name, String description, ImmutableList<Entrance> entrances, List<Item> items, int zombies) {
+    public Room(String name, String description, List<Entrance> entrances, List<Item> items, int zombies) {
         this.name = name;
         this.description = description;
         this.entrances = entrances;
@@ -29,7 +27,7 @@ public class Room {
         return description;
     }
 
-    public ImmutableList<Entrance> getEntrances() {
+    public List<Entrance> getEntrances() {
         return entrances;
     }
 
