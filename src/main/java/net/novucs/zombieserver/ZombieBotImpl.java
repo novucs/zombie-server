@@ -10,23 +10,24 @@ import com.sk89q.intake.util.auth.AuthorizationException;
 import net.novucs.zombieserver.command.Bindings;
 import net.novucs.zombieserver.command.CommandExecutor;
 import net.novucs.zombieserver.command.CommandResult;
+import world.ZombieBot;
 
 import java.util.List;
 
 /**
- * class that implements the ZombieBot interface and plays the game
+ * An implementation {@link ZombieBot} to run the zombie game server.
  *
- * @author br-gaster
+ * @author William Randall
  */
-public class ZombieBot implements world.ZombieBot {
+public class ZombieBotImpl implements ZombieBot {
 
     private final Dispatcher commandDispatcher;
 
-    private ZombieBot(Dispatcher commandDispatcher) {
+    private ZombieBotImpl(Dispatcher commandDispatcher) {
         this.commandDispatcher = commandDispatcher;
     }
 
-    public static ZombieBot create() {
+    public static ZombieBotImpl create() {
         Dispatcher commandDispatcher = new SimpleDispatcher();
 
         // Use the parametric builder to construct CommandCallable objects from annotations.
@@ -36,13 +37,13 @@ public class ZombieBot implements world.ZombieBot {
         // Create and register CommandCallable objects from the methods of each passed object.
         builder.registerMethodsAsCommands(commandDispatcher, new CommandExecutor());
 
-        return new ZombieBot(commandDispatcher);
+        return new ZombieBotImpl(commandDispatcher);
     }
 
     /**
-     * should game quit
+     * Determines whether the game should quit.
      *
-     * @return return true if exit program, otherwise false
+     * @return <tt>true</tt> if the game should quit.
      */
     @Override
     public boolean shouldQuit() {
@@ -50,9 +51,9 @@ public class ZombieBot implements world.ZombieBot {
     }
 
     /**
-     * prompt to be displayed to user
+     * Gets the text sent to the player when the game begins.
      *
-     * @return
+     * @return the text sent to the player.
      */
     @Override
     public String begin() {
@@ -60,9 +61,9 @@ public class ZombieBot implements world.ZombieBot {
     }
 
     /**
-     * compute current score
+     * Gets the current score.
      *
-     * @return current score
+     * @return the score.
      */
     @Override
     public int currentScore() {
@@ -70,20 +71,24 @@ public class ZombieBot implements world.ZombieBot {
     }
 
     /**
-     * should timer be enabled? if should be enabled, then method returns true,
-     * and goes back into state of not enable.
+     * Gets if the zombie timer should be started on the client. This returns
+     * <tt>true</tt> when the player moves to a new room that contains zombies.
+     * After being is called, the server-side timer state is reset until the
+     * player enters another zombie-infested room.
      *
-     * @return true if enable timer, otherwise false
+     * @return <tt>true</tt> if the client zombie timer should be enabled.
      */
     public boolean enableTimer() {
         return false;
     }
 
     /**
-     * should timer be disabled? if should be disabled, then method returns
-     * true, and goes back into state of don't disable.
+     * Gets if the zombie timer should be disabled on the client. This returns
+     * <tt>true</tt> when the player has just killed all zombies in the current
+     * room. After being called, the server-side state resets and future calls
+     * to this method return <tt>false</tt>.
      *
-     * @return
+     * @return <tt>true</tt> if the client zombie timer should be disabled.
      */
     public boolean disableTimer() {
         return false;
