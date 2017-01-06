@@ -47,16 +47,7 @@ public class GameManager {
      * @return <tt>true</tt> if the game should quit.
      */
     public boolean shouldQuit() {
-        return true;
-    }
-
-    /**
-     * Gets the text sent to the player when the game begins.
-     *
-     * @return the text sent to the player.
-     */
-    public String begin() {
-        return "this is the message that gets displayed when game begins";
+        return false;
     }
 
     /**

@@ -6,23 +6,23 @@ import org.java_websocket.framing.FrameBuilder;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
-import rx.Observable;
-import rx.subjects.BehaviorSubject;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
 public class ZombieWebSocket extends WebSocketServer {
 
-    private final BehaviorSubject<String> messages = BehaviorSubject.create();
+    private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
 
     public ZombieWebSocket(InetAddress address, int port) {
         super(new InetSocketAddress(address, port));
     }
 
-    public Observable<String> messageStream() {
-        return messages.asObservable();
+    public BlockingQueue<String> getMessageQueue() {
+        return messageQueue;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ZombieWebSocket extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        messages.onNext(message);
+        messageQueue.add(message);
     }
 
     @Override

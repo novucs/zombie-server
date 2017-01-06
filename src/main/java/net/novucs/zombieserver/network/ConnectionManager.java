@@ -9,7 +9,7 @@ import java.util.List;
 public class ConnectionManager {
 
     private final ZombieWebSocket socket;
-    private boolean playing = false;
+    private boolean playing = true;
 
     public ConnectionManager(ZombieWebSocket socket) {
         this.socket = socket;
@@ -23,33 +23,39 @@ public class ConnectionManager {
     public void initialize(GameManager game) {
         socket.start();
 
-        socket.messageStream().subscribe(message -> {
-            if (playing) {
-                List<String> response = game.executeCommand(message);
+        String message;
 
-                if (game.shouldQuit()) {
-                    sendOutput("<b>bye bye</b>");
-                    playing = false;
-                    try {
-                        socket.stop();
-                    } catch (IOException | InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+        while (playing) {
 
-                sendScore(game.currentScore());
-                response.forEach(this::sendOutput);
-
-                if (game.enableTimer()) {
-                    sendTimer(5);
-                } else if (game.disableTimer()) {
-                    sendTimer(0);
-                }
-            } else if (message.equals("begin")) {
-                playing = true;
-                sendOutput(game.begin());
+            try {
+                message = socket.getMessageQueue().take();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
             }
-        });
+
+            List<String> response = game.executeCommand(message);
+
+            if (game.shouldQuit()) {
+                sendOutput("<b>bye bye</b>");
+                playing = false;
+
+                try {
+                    socket.stop();
+                } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            sendScore(game.currentScore());
+            response.forEach(this::sendOutput);
+
+            if (game.enableTimer()) {
+                sendTimer(5);
+            } else if (game.disableTimer()) {
+                sendTimer(0);
+            }
+        }
     }
 
     private void sendOutput(String text) {

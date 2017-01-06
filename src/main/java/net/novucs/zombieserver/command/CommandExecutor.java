@@ -4,6 +4,11 @@ import com.sk89q.intake.Command;
 
 public class CommandExecutor {
 
+    @Command(aliases = "begin", desc = "")
+    public void begin(CommandResult result) {
+        result.get().add("this is the message that gets displayed when game begins");
+    }
+
     @Command(aliases = "info", desc = "")
     public void info(CommandResult result) {
         result.get().add("handle info command");
