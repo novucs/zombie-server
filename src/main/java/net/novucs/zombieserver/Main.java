@@ -1,6 +1,6 @@
 package net.novucs.zombieserver;
 
-import util.ZombieServer;
+import net.novucs.zombieserver.network.ConnectionManager;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -28,7 +28,7 @@ public class Main implements Runnable {
             // TODO you need to define classes to represent the world
             // then here you should use WorldLoader to load the world and
             // convert it to your representation of the world to play
-            // the game with your version of ZombieBotImpl.
+            // the game with your version of GameManager.
 
             // create an instance of our server to communicate with the
             // web frontend.
@@ -42,6 +42,6 @@ public class Main implements Runnable {
         // get host address, rather than using 127.0.0.1, as this
         // will then be displayed when server waits for connection
         // which allows the address to then be typed into client.
-        new ZombieServer(address.getHostAddress(), 8085, ZombieBotImpl.create());
+        new ConnectionManager(address.getHostAddress(), 8085, GameManager.create());
     }
 }

@@ -10,24 +10,25 @@ import com.sk89q.intake.util.auth.AuthorizationException;
 import net.novucs.zombieserver.command.Bindings;
 import net.novucs.zombieserver.command.CommandExecutor;
 import net.novucs.zombieserver.command.CommandResult;
-import world.ZombieBot;
+import net.novucs.zombieserver.network.ConnectionManager;
 
 import java.util.List;
 
 /**
- * An implementation {@link ZombieBot} to run the zombie game server.
+ * The core game manager, provides accessor methods for the {@link ConnectionManager}
+ * to use.
  *
  * @author William Randall
  */
-public class ZombieBotImpl implements ZombieBot {
+public class GameManager {
 
     private final Dispatcher commandDispatcher;
 
-    private ZombieBotImpl(Dispatcher commandDispatcher) {
+    private GameManager(Dispatcher commandDispatcher) {
         this.commandDispatcher = commandDispatcher;
     }
 
-    public static ZombieBotImpl create() {
+    public static GameManager create() {
         Dispatcher commandDispatcher = new SimpleDispatcher();
 
         // Use the parametric builder to construct CommandCallable objects from annotations.
@@ -37,7 +38,7 @@ public class ZombieBotImpl implements ZombieBot {
         // Create and register CommandCallable objects from the methods of each passed object.
         builder.registerMethodsAsCommands(commandDispatcher, new CommandExecutor());
 
-        return new ZombieBotImpl(commandDispatcher);
+        return new GameManager(commandDispatcher);
     }
 
     /**
@@ -45,7 +46,6 @@ public class ZombieBotImpl implements ZombieBot {
      *
      * @return <tt>true</tt> if the game should quit.
      */
-    @Override
     public boolean shouldQuit() {
         return false;
     }
@@ -55,7 +55,6 @@ public class ZombieBotImpl implements ZombieBot {
      *
      * @return the text sent to the player.
      */
-    @Override
     public String begin() {
         return "this is the message that gets displayed when game begins";
     }
@@ -65,7 +64,6 @@ public class ZombieBotImpl implements ZombieBot {
      *
      * @return the score.
      */
-    @Override
     public int currentScore() {
         return 0;
     }
@@ -100,7 +98,6 @@ public class ZombieBotImpl implements ZombieBot {
      * @param command the command to be processed.
      * @return the output to be displayed.
      */
-    @Override
     public List<String> processCmd(String command) {
         // Create the locals.
         CommandResult result = new CommandResult();
