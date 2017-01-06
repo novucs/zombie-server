@@ -1,32 +1,40 @@
 package net.novucs.zombieserver.network;
 
 import net.novucs.zombieserver.GameManager;
+import net.novucs.zombieserver.GameState;
+import net.novucs.zombieserver.Main;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-public class ConnectionManager {
+public class ConnectionManager implements Runnable {
 
-    private final ZombieWebSocket socket;
-    private boolean playing = true;
+    private final GameManager game;
+    private final GameServerSocket socket;
 
-    public ConnectionManager(ZombieWebSocket socket) {
+    public ConnectionManager(GameManager game, GameServerSocket socket) {
+        this.game = game;
         this.socket = socket;
     }
 
-    public static ConnectionManager create(InetAddress address, int port) {
-        ZombieWebSocket socket = new ZombieWebSocket(address, port);
-        return new ConnectionManager(socket);
+    public static ConnectionManager create(GameManager game, InetAddress address, int port) {
+        GameServerSocket socket = new GameServerSocket(address, port);
+        return new ConnectionManager(game, socket);
     }
 
-    public void initialize(GameManager game) {
+    public void initialize() {
         socket.start();
+        Main.getLogger().info("Waiting for connection " + socket.getAddress().getHostName() + ":" + socket.getPort());
+        run();
+    }
 
+    @Override
+    public void run() {
         String message;
 
-        while (playing) {
-
+        while (!Thread.currentThread().isInterrupted()) {
             try {
                 message = socket.getMessageQueue().take();
             } catch (InterruptedException e) {
@@ -35,20 +43,20 @@ public class ConnectionManager {
             }
 
             List<String> response = game.executeCommand(message);
-
-            if (game.shouldQuit()) {
-                sendOutput("<b>bye bye</b>");
-                playing = false;
-
-                try {
-                    socket.stop();
-                } catch (IOException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
             sendScore(game.currentScore());
             response.forEach(this::sendOutput);
+
+            if (game.getState() == GameState.FINISHED) {
+                try {
+                    socket.stop((int) TimeUnit.SECONDS.toMillis(5));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+
+                break;
+            }
 
             if (game.enableTimer()) {
                 sendTimer(5);

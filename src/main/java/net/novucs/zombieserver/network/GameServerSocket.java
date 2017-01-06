@@ -13,11 +13,11 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
-public class ZombieWebSocket extends WebSocketServer {
+public class GameServerSocket extends WebSocketServer {
 
     private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
 
-    public ZombieWebSocket(InetAddress address, int port) {
+    public GameServerSocket(InetAddress address, int port) {
         super(new InetSocketAddress(address, port));
     }
 

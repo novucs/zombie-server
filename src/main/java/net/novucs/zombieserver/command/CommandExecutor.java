@@ -1,12 +1,26 @@
 package net.novucs.zombieserver.command;
 
 import com.sk89q.intake.Command;
+import net.novucs.zombieserver.GameManager;
+import net.novucs.zombieserver.GameState;
 
 public class CommandExecutor {
 
+    private final GameManager game;
+
+    public CommandExecutor(GameManager game) {
+        this.game = game;
+    }
+
     @Command(aliases = "begin", desc = "")
     public void begin(CommandResult result) {
+        if (game.getState() != GameState.START) {
+            result.get().add("<b>That's not a verb I recognise.</b>");
+            return;
+        }
+
         result.get().add("this is the message that gets displayed when game begins");
+        game.setState(GameState.RUNNING);
     }
 
     @Command(aliases = "info", desc = "")
@@ -46,7 +60,13 @@ public class CommandExecutor {
 
     @Command(aliases = "quit", desc = "")
     public void quit(CommandResult result) {
-        result.get().add("handle quit command");
+        if (game.getState() != GameState.RUNNING) {
+            result.get().add("<b>That's not a verb I recognise.</b>");
+            return;
+        }
+
+        result.get().add("<b>bye bye</b>");
+        game.setState(GameState.FINISHED);
     }
 
     @Command(aliases = "inventory", desc = "")

@@ -23,6 +23,7 @@ import java.util.List;
 public class GameManager {
 
     private final Dispatcher commandDispatcher;
+    private GameState state = GameState.START;
 
     private GameManager(Dispatcher commandDispatcher) {
         this.commandDispatcher = commandDispatcher;
@@ -30,24 +31,24 @@ public class GameManager {
 
     public static GameManager create() {
         Dispatcher commandDispatcher = new SimpleDispatcher();
+        GameManager game = new GameManager(commandDispatcher);
 
         // Use the parametric builder to construct CommandCallable objects from annotations.
         ParametricBuilder builder = new ParametricBuilder();
         builder.addBinding(new Bindings(), CommandResult.class);
 
         // Create and register CommandCallable objects from the methods of each passed object.
-        builder.registerMethodsAsCommands(commandDispatcher, new CommandExecutor());
+        builder.registerMethodsAsCommands(commandDispatcher, new CommandExecutor(game));
 
-        return new GameManager(commandDispatcher);
+        return game;
     }
 
-    /**
-     * Determines whether the game should quit.
-     *
-     * @return <tt>true</tt> if the game should quit.
-     */
-    public boolean shouldQuit() {
-        return false;
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
     }
 
     /**

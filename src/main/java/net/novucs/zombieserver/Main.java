@@ -26,10 +26,9 @@ public class Main {
             return;
         }
 
-        GameManager gameManager = GameManager.create();
-        ConnectionManager connectionManager = ConnectionManager.create(address, PORT);
-        connectionManager.initialize(gameManager);
-        getLogger().info("Waiting for connection " + address.getHostName() + ":" + PORT);
+        GameManager game = GameManager.create();
+        ConnectionManager connectionManager = ConnectionManager.create(game, address, PORT);
+        connectionManager.initialize();
     }
 
     public static Logger getLogger() {
