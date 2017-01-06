@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   ~
+   ~ Zombie Server implementation.
+   ~ Written for OO @ UWE.
+   ~ Authors: William Randall, Gareth Perry, Chris Taylor
+   ~
+   -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -11,13 +20,20 @@
     <description>A server implementation for the Zombie Game for OO at UWE</description>
 
     <build>
+        <!-- Use a more nicely formatted name for the compiled jarfile -->
         <finalName>${project.name}</finalName>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
+
+        <!-- Keep this here, we may need to filter resources at some point -->
+        <!--
+           ~ <resources>
+           ~     <resource>
+           ~         <directory>src/main/resources</directory>
+           ~          <filtering>true</filtering>
+           ~     </resource>
+           ~ </resources>
+           -->
+
+        <!-- Compile with Java 8 -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -31,7 +47,36 @@
         </plugins>
     </build>
 
+    <repositories>
+        <!-- Sk89q's repo, used for Intake -->
+        <repository>
+            <id>sk89q-repo</id>
+            <url>http://maven.sk89q.com/repo/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <!-- Google core libraries -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>21.0-rc1</version>
+        </dependency>
+
+        <!-- Intake for much nicer command processing -->
+        <dependency>
+            <groupId>com.sk89q</groupId>
+            <artifactId>intake</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Dependencies given by Ben -->
         <dependency>
             <groupId>org.java_websocket</groupId>
             <artifactId>java_websocket</artifactId>
