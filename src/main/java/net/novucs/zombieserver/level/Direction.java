@@ -1,4 +1,4 @@
-package net.novucs.zombieserver;
+package net.novucs.zombieserver.level;
 
 import java.util.HashMap;
 import java.util.Map;
