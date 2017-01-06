@@ -1,6 +1,16 @@
 package net.novucs.zombieserver;
 
-import java.util.ArrayList;
+import com.sk89q.intake.CommandException;
+import com.sk89q.intake.InvalidUsageException;
+import com.sk89q.intake.context.CommandLocals;
+import com.sk89q.intake.dispatcher.Dispatcher;
+import com.sk89q.intake.dispatcher.SimpleDispatcher;
+import com.sk89q.intake.parametric.ParametricBuilder;
+import com.sk89q.intake.util.auth.AuthorizationException;
+import net.novucs.zombieserver.command.Bindings;
+import net.novucs.zombieserver.command.CommandExecutor;
+import net.novucs.zombieserver.command.CommandResult;
+
 import java.util.List;
 
 /**
@@ -10,7 +20,23 @@ import java.util.List;
  */
 public class ZombieBot implements world.ZombieBot {
 
-    ZombieBot() {
+    private final Dispatcher commandDispatcher;
+
+    private ZombieBot(Dispatcher commandDispatcher) {
+        this.commandDispatcher = commandDispatcher;
+    }
+
+    public static ZombieBot create() {
+        Dispatcher commandDispatcher = new SimpleDispatcher();
+
+        // Use the parametric builder to construct CommandCallable objects from annotations.
+        ParametricBuilder builder = new ParametricBuilder();
+        builder.addBinding(new Bindings(), CommandResult.class);
+
+        // Create and register CommandCallable objects from the methods of each passed object.
+        builder.registerMethodsAsCommands(commandDispatcher, new CommandExecutor());
+
+        return new ZombieBot(commandDispatcher);
     }
 
     /**
@@ -71,46 +97,25 @@ public class ZombieBot implements world.ZombieBot {
      */
     @Override
     public List<String> processCmd(String command) {
-        String[] args = command.split("\\s");
-        List<String> result = new ArrayList<>();
+        // Create the locals.
+        CommandResult result = new CommandResult();
+        CommandLocals locals = new CommandLocals();
+        locals.put(CommandResult.class, result);
 
-        switch (args[0]) {
-            case "info":
-                result.add("handle info command");
-                break;
-            case "look":
-                result.add("handle look command");
-                break;
-            case "move":
-                result.add("handle move command");
-                break;
-            case "pickup":
-                result.add("handle pickup command");
-                break;
-            case "kill":
-                result.add("handle kill command");
-                break;
-            case "drop":
-                result.add("handle drop command");
-                break;
-            case "timerexpired":
-                result.add("handle timeexpired command");
-                break;
-            case "quit":
-                result.add("handle quit command");
-                break;
-            case "inventory":
-                result.add("handle inventory command");
-                break;
-            case "blank":
-                result.add("I beg your pardon?");
-                break;
-            case "":
-                break;
-            default:
-                result.add("<b>That's not a verb I recognise.</b>");
+        try {
+            // Execute commandDispatcher with the fully reconstructed command message.
+            commandDispatcher.call(command, locals, new String[0]);
+        } catch (InvalidUsageException e) {
+            // Invalid command usage should not be harmful. Print something friendly.
+            result.get().add("<b>That's not a verb I recognise.</b>");
+        } catch (AuthorizationException e) {
+            // Print friendly message in case of permission failure.
+            result.get().add("<b>You do not have permission.</b>");
+        } catch (CommandException e) {
+            // Everything else is unexpected and should be considered an error.
+            throw new RuntimeException(e);
         }
 
-        return result;
+        return result.get();
     }
 }

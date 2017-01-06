@@ -60,7 +60,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>21.0-rc1</version>
+            <version>20.0</version>
             <scope>compile</scope>
         </dependency>
 
@@ -70,6 +70,8 @@
             <artifactId>intake</artifactId>
             <version>3.1.2-SNAPSHOT</version>
             <scope>compile</scope>
+
+            <!-- We're including our own version of Guava -->
             <exclusions>
                 <exclusion>
                     <groupId>com.google.guava</groupId>

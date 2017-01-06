@@ -46,6 +46,6 @@ public class Main {
         // get host address, rather than using 127.0.0.1, as this
         // will then be displayed when server waits for connection
         // which allows the address to then be typed into client.
-        ZombieServer server = new ZombieServer(address.getHostAddress(), 8085, new ZombieBot());
+        ZombieServer server = new ZombieServer(address.getHostAddress(), 8085, ZombieBot.create());
     }
 }
