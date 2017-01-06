@@ -47,7 +47,7 @@ public class GameManager {
      * @return <tt>true</tt> if the game should quit.
      */
     public boolean shouldQuit() {
-        return false;
+        return true;
     }
 
     /**
@@ -98,7 +98,7 @@ public class GameManager {
      * @param command the command to be processed.
      * @return the output to be displayed.
      */
-    public List<String> processCmd(String command) {
+    public List<String> executeCommand(String command) {
         // Create the locals.
         CommandResult result = new CommandResult();
         CommandLocals locals = new CommandLocals();

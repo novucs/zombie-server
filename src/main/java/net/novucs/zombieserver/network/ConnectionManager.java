@@ -1,29 +1,40 @@
 package net.novucs.zombieserver.network;
 
 import net.novucs.zombieserver.GameManager;
-import rx.Observable;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.List;
 
 public class ConnectionManager {
 
-    private final ZombieWebSocket zsocket;
-    private final Observable<String> messages;
+    private final ZombieWebSocket socket;
     private boolean playing = false;
 
-    public ConnectionManager(String host, int port, GameManager game) {
-        zsocket = new ZombieWebSocket(host, port);
-        zsocket.start();
+    public ConnectionManager(ZombieWebSocket socket) {
+        this.socket = socket;
+    }
 
-        messages = zsocket.messageStream();
-        messages.subscribe(msg -> {
+    public static ConnectionManager create(InetAddress address, int port) {
+        ZombieWebSocket socket = new ZombieWebSocket(address, port);
+        return new ConnectionManager(socket);
+    }
+
+    public void initialize(GameManager game) {
+        socket.start();
+
+        socket.messageStream().subscribe(message -> {
             if (playing) {
-                List<String> response = game.processCmd(msg);
+                List<String> response = game.executeCommand(message);
 
                 if (game.shouldQuit()) {
                     sendOutput("<b>bye bye</b>");
                     playing = false;
-                    System.exit(0);
+                    try {
+                        socket.stop();
+                    } catch (IOException | InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
                 sendScore(game.currentScore());
@@ -34,22 +45,22 @@ public class ConnectionManager {
                 } else if (game.disableTimer()) {
                     sendTimer(0);
                 }
-            } else if (msg.equals("begin")) {
+            } else if (message.equals("begin")) {
                 playing = true;
                 sendOutput(game.begin());
             }
         });
     }
 
-    private void sendOutput(final String text) {
-        zsocket.send("{ \"type\" : \"output\", \"text\" : \"" + text + "\" }");
+    private void sendOutput(String text) {
+        socket.send("{ \"type\" : \"output\", \"text\" : \"" + text + "\" }");
     }
 
-    private void sendTimer(final int duration) {
-        zsocket.send("{ \"type\" : \"timer\", \"value\" : \"" + duration + "\" }");
+    private void sendTimer(int duration) {
+        socket.send("{ \"type\" : \"timer\", \"value\" : \"" + duration + "\" }");
     }
 
-    private void sendScore(final int score) {
-        zsocket.send("{ \"type\" : \"score\", \"value\" : " + score + " }");
+    private void sendScore(int score) {
+        socket.send("{ \"type\" : \"score\", \"value\" : " + score + " }");
     }
 }

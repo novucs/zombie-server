@@ -1,5 +1,6 @@
 package net.novucs.zombieserver.network;
 
+import net.novucs.zombieserver.Main;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.FrameBuilder;
 import org.java_websocket.framing.Framedata;
@@ -8,41 +9,40 @@ import org.java_websocket.server.WebSocketServer;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.Collection;
+import java.util.logging.Level;
 
 public class ZombieWebSocket extends WebSocketServer {
 
     private final BehaviorSubject<String> messages = BehaviorSubject.create();
 
-    public ZombieWebSocket(String host, int port) {
-        super(new InetSocketAddress(port));
-        System.out.println("Waiting for connection " + host + ":" + port);
+    public ZombieWebSocket(InetAddress address, int port) {
+        super(new InetSocketAddress(address, port));
     }
 
     public Observable<String> messageStream() {
-        return this.messages.asObservable();
+        return messages.asObservable();
     }
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        System.out.println("connected");
+        Main.getLogger().info("Connection opened.");
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        System.out.println("closed");
+        Main.getLogger().info("Connection closed.");
     }
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        System.out.println("Error:");
-        ex.printStackTrace();
+        Main.getLogger().log(Level.SEVERE, "Error: ", ex);
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        this.messages.onNext(message);
+        messages.onNext(message);
     }
 
     @Override
@@ -52,12 +52,14 @@ public class ZombieWebSocket extends WebSocketServer {
         conn.sendFrame(frame);
     }
 
-    public void send(String msg) {
-        Collection<WebSocket> con = this.connections();
-        synchronized (con) {
-            for (WebSocket c : con) {
-                c.send(msg);
-            }
+    /**
+     * Sends a message to all connected clients.
+     *
+     * @param message the message to send.
+     */
+    public void send(String message) {
+        for (WebSocket socket : connections()) {
+            socket.send(message);
         }
     }
 }
