@@ -41,8 +41,16 @@ public class Room {
         return zombies;
     }
 
+    public boolean hasZombies() {
+        return zombies > 0;
+    }
+
     public void setZombies(int zombies) {
         this.zombies = zombies;
+    }
+
+    public void decrementZombies() {
+        zombies--;
     }
 
     @Override

@@ -129,7 +129,20 @@ public class CommandExecutor {
 
     @Command(aliases = "kill", desc = "")
     public void kill(CommandResult result) {
-        result.get().add("handle kill command");
+        Room room = game.getCurrentRoom();
+
+        if (!room.hasZombies()) {
+            result.get().add("No zombies found in this room");
+            return;
+        }
+
+        room.decrementZombies();
+
+        if (!room.hasZombies()) {
+            game.setZombieTimerState(ZombieTimerState.STOP);
+        }
+
+        result.get().add("Zombie killed");
     }
 
     @Command(aliases = "drop", desc = "")

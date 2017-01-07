@@ -1,5 +1,6 @@
 package net.novucs.zombieserver.level.generator;
 
+import com.google.common.collect.HashMultiset;
 import net.novucs.zombieserver.level.*;
 import net.novucs.zombieserver.level.builder.EntranceBuilder;
 import net.novucs.zombieserver.level.builder.RoomBuilder;
@@ -24,6 +25,7 @@ public class WorldGenerator {
         RoomBuilder roomBuilder = new RoomBuilder();
         roomBuilder.name("Toilet");
         roomBuilder.description("You are in the toilet");
+        roomBuilder.items(HashMultiset.create());
         roomBuilder.addItem(Item.of(ItemType.GOLD));
         roomBuilder.addItem(Item.of(ItemType.CHAINSAW));
         roomBuilder.addItem(Item.of(ItemType.DAISY));
@@ -32,12 +34,14 @@ public class WorldGenerator {
 
         roomBuilder.name("Exit");
         roomBuilder.description("This is the final room...");
+        roomBuilder.items(HashMultiset.create());
         roomBuilder.addItem(Item.of(ItemType.GOLD));
         roomBuilder.zombies(1);
         Room exit = roomBuilder.build();
 
         roomBuilder.name("R3");
         roomBuilder.description("Level R3");
+        roomBuilder.items(HashMultiset.create());
         roomBuilder.addItem(Item.of(ItemType.KEY));
         roomBuilder.addItem(Item.of(ItemType.CHAINSAW));
         roomBuilder.zombies(2);
@@ -45,6 +49,7 @@ public class WorldGenerator {
 
         roomBuilder.name("R4");
         roomBuilder.description("Level R4");
+        roomBuilder.items(HashMultiset.create());
         roomBuilder.addItem(Item.of(ItemType.GOLD));
         roomBuilder.addItem(Item.of(ItemType.CHAINSAW));
         roomBuilder.zombies(0);

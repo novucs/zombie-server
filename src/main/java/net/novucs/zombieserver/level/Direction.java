@@ -27,7 +27,7 @@ public enum Direction {
     }
 
     public static Optional<Direction> getByShorthand(String shorthand) {
-        return Optional.ofNullable(BY_SHORTHAND.get(shorthand));
+        return Optional.ofNullable(BY_SHORTHAND.get(shorthand.toUpperCase()));
     }
 
     static {
