@@ -172,7 +172,8 @@ public class CommandExecutor {
 
     @Command(aliases = "timerexpired", desc = "")
     public void timerexpired(CommandResult result) {
-        result.get().add("handle timerexpired command");
+        result.get().add("You have died");
+        game.setState(GameState.FINISHED);
     }
 
     @Command(aliases = "quit", desc = "")
