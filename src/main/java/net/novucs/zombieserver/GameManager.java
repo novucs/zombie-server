@@ -87,6 +87,10 @@ public class GameManager {
         this.score++;
     }
 
+    public void decrementScore() {
+        this.score--;
+    }
+
     public Room getCurrentRoom() {
         return currentRoom;
     }

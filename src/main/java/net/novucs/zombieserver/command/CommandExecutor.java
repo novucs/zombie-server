@@ -1,5 +1,6 @@
 package net.novucs.zombieserver.command;
 
+import com.google.common.collect.Multiset;
 import com.sk89q.intake.Command;
 import net.novucs.zombieserver.GameManager;
 import net.novucs.zombieserver.GameState;
@@ -53,7 +54,7 @@ public class CommandExecutor {
         result.get().add(getItemInfo(room.getItems()));
     }
 
-    private String getItemInfo(List<Item> items) {
+    private String getItemInfo(Multiset<Item> items) {
         StringBuilder target = new StringBuilder();
 
         for (Item item : items) {
@@ -106,8 +107,22 @@ public class CommandExecutor {
     }
 
     @Command(aliases = "drop", desc = "")
-    public void drop(CommandResult result) {
-        result.get().add("handle drop command");
+    public void drop(CommandResult result, Item item) {
+        boolean removed = game.getInventory().remove(item);
+
+        if (!removed) {
+            result.get().add("No such item");
+            return;
+        }
+
+        result.get().add("Item dropped");
+        game.getCurrentRoom().getItems().add(item);
+
+        ItemType.get(item.getItem()).ifPresent(itemType -> {
+            if (itemType == ItemType.GOLD) {
+                game.decrementScore();
+            }
+        });
     }
 
     @Command(aliases = "timerexpired", desc = "")
