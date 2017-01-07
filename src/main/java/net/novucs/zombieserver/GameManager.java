@@ -16,7 +16,7 @@ import net.novucs.zombieserver.level.*;
 import net.novucs.zombieserver.level.generator.WorldGenerator;
 import net.novucs.zombieserver.network.ConnectionManager;
 
-import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * The core game manager, provides accessor methods for the {@link ConnectionManager}
@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class GameManager {
 
+    private static final Pattern IGNORED_MESSAGES = Pattern.compile("(For parameter '\\w+':)|( Unused parameters:.*)");
     private final Dispatcher commandDispatcher;
     private final World world;
     private final Multiset<Item> inventory = HashMultiset.create();
@@ -119,7 +120,7 @@ public class GameManager {
      * @param command the command to be processed.
      * @return the output to be displayed.
      */
-    public List<String> executeCommand(String command) {
+    public CommandResult executeCommand(String command) {
         // Create the locals.
         CommandResult result = new CommandResult();
         CommandLocals locals = new CommandLocals();
@@ -130,15 +131,19 @@ public class GameManager {
             commandDispatcher.call(command, locals, new String[0]);
         } catch (InvalidUsageException e) {
             // Invalid command usage should not be harmful. Print something friendly.
-            result.get().add("<b>That's not a verb I recognise.</b>");
+            if (e.getCommand() == commandDispatcher) {
+                result.add("<b>That's not a verb I recognise.</b>");
+            } else {
+                result.add("<b>" + IGNORED_MESSAGES.matcher(e.getMessage()).replaceAll("") + "</b>");
+            }
         } catch (AuthorizationException e) {
             // Print friendly message in case of permission failure.
-            result.get().add("<b>You do not have permission.</b>");
+            result.add("<b>You do not have permission.</b>");
         } catch (CommandException e) {
             // Everything else is unexpected and should be considered an error.
             throw new RuntimeException(e);
         }
 
-        return result.get();
+        return result;
     }
 }

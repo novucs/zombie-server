@@ -20,36 +20,36 @@ public class CommandExecutor {
     @Command(aliases = "begin", desc = "")
     public void begin(CommandResult result) {
         if (game.getState() != GameState.START) {
-            result.get().add("<b>That's not a verb I recognise.</b>");
+            result.add("<b>That's not a verb I recognise.</b>");
             return;
         }
 
-        result.get().add(game.getWorld().getInfo());
+        result.add(game.getWorld().getInfo());
         game.setState(GameState.RUNNING);
     }
 
     @Command(aliases = "info", desc = "")
     public void info(CommandResult result) {
-        result.get().add(game.getWorld().getInfo());
+        result.add(game.getWorld().getInfo());
     }
 
     @Command(aliases = "look", desc = "")
     public void look(CommandResult result) {
         Room room = game.getCurrentRoom();
-        result.get().add("<b>" + room.getDescription() + "</b>");
+        result.add("<b>" + room.getDescription() + "</b>");
 
         switch (room.getEntrances().size()) {
             case 0:
                 break;
             case 1:
                 String direction = room.getEntrances().get(0).getDirection().getShorthand();
-                result.get().add("There is an entrance to the " + direction);
+                result.add("There is an entrance to the " + direction);
                 break;
             default:
-                result.get().add(getEntranceInfo(room.getEntrances()));
+                result.add(getEntranceInfo(room.getEntrances()));
         }
 
-        result.get().add(getItemInfo(room.getItems()));
+        result.add(getItemInfo(room.getItems()));
     }
 
     private String getItemInfo(Multiset<Item> items) {
@@ -80,18 +80,18 @@ public class CommandExecutor {
         Optional<Entrance> entrance = getEntrance(direction, game.getCurrentRoom().getEntrances());
 
         if (!entrance.isPresent()) {
-            result.get().add("No entrance exists");
+            result.add("No entrance exists");
             return;
         }
 
         if (entrance.get().isLocked() && !game.getInventory().remove(Item.of(ItemType.KEY))) {
-            result.get().add("A key is needed to open entrance in " + direction.getShorthand());
+            result.add("A key is needed to open entrance in " + direction.getShorthand());
             return;
         }
 
         Room room = entrance.get().getTo();
         game.setCurrentRoom(room);
-        result.get().add("You are now in " + room.getName());
+        result.add("You are now in " + room.getName());
 
         if (room.getZombies() > 0) {
             game.setZombieTimerState(ZombieTimerState.START);
@@ -113,11 +113,11 @@ public class CommandExecutor {
         boolean removed = game.getCurrentRoom().getItems().remove(item);
 
         if (!removed) {
-            result.get().add("<b>This room does not contain a " + item.getItem() + "</b>");
+            result.add("<b>This room does not contain a " + item.getItem() + "</b>");
             return;
         }
 
-        result.get().add("Picked up " + item.getItem());
+        result.add("Picked up " + item.getItem());
         game.getInventory().add(item);
 
         ItemType.get(item.getItem()).ifPresent(itemType -> {
@@ -132,13 +132,13 @@ public class CommandExecutor {
         Room room = game.getCurrentRoom();
 
         if (!room.hasZombies()) {
-            result.get().add("No zombies found in this room");
+            result.add("No zombies found in this room");
             return;
         }
 
         if (!game.getInventory().remove(Item.of(ItemType.CHAINSAW)) &&
                 !game.getInventory().remove(Item.of(ItemType.DAISY))) {
-            result.get().add("Unable to kill zombie, no weapons available");
+            result.add("Unable to kill zombie, no weapons available");
             return;
         }
 
@@ -148,7 +148,7 @@ public class CommandExecutor {
             game.setZombieTimerState(ZombieTimerState.STOP);
         }
 
-        result.get().add("Zombie killed");
+        result.add("Zombie killed");
     }
 
     @Command(aliases = "drop", desc = "")
@@ -156,11 +156,11 @@ public class CommandExecutor {
         boolean removed = game.getInventory().remove(item);
 
         if (!removed) {
-            result.get().add("No such item");
+            result.add("No such item");
             return;
         }
 
-        result.get().add("Item dropped");
+        result.add("Item dropped");
         game.getCurrentRoom().getItems().add(item);
 
         ItemType.get(item.getItem()).ifPresent(itemType -> {
@@ -172,18 +172,18 @@ public class CommandExecutor {
 
     @Command(aliases = "timerexpired", desc = "")
     public void timerexpired(CommandResult result) {
-        result.get().add("You have died");
+        result.add("You have died");
         game.setState(GameState.FINISHED);
     }
 
     @Command(aliases = "quit", desc = "")
     public void quit(CommandResult result) {
         if (game.getState() != GameState.RUNNING) {
-            result.get().add("<b>That's not a verb I recognise.</b>");
+            result.add("<b>That's not a verb I recognise.</b>");
             return;
         }
 
-        result.get().add("<b>bye bye</b>");
+        result.add("<b>bye bye</b>");
         game.setState(GameState.FINISHED);
     }
 
@@ -197,11 +197,11 @@ public class CommandExecutor {
                     target.append(itemType.getHtml()));
         }
 
-        result.get().add(target.toString());
+        result.add(target.toString());
     }
 
     @Command(aliases = "blank", desc = "")
     public void blank(CommandResult result) {
-        result.get().add("I beg your pardon?");
+        result.add("I beg your pardon?");
     }
 }
