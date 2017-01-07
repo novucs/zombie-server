@@ -136,6 +136,12 @@ public class CommandExecutor {
             return;
         }
 
+        if (!game.getInventory().remove(Item.of(ItemType.CHAINSAW)) &&
+                !game.getInventory().remove(Item.of(ItemType.DAISY))) {
+            result.get().add("Unable to kill zombie, no weapons available");
+            return;
+        }
+
         room.decrementZombies();
 
         if (!room.hasZombies()) {
