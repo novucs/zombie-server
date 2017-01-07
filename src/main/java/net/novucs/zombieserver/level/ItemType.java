@@ -28,12 +28,12 @@ public class ItemType {
         }
 
         ItemType itemType = new ItemType(name, html);
-        BY_NAME.put(name, itemType);
+        BY_NAME.put(name.toUpperCase(), itemType);
         return itemType;
     }
 
     public static Optional<ItemType> get(String name) {
-        return Optional.ofNullable(BY_NAME.getOrDefault(name, null));
+        return Optional.ofNullable(BY_NAME.getOrDefault(name.toUpperCase(), null));
     }
 
     public String getName() {

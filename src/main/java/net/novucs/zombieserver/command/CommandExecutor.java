@@ -82,8 +82,16 @@ public class CommandExecutor {
     }
 
     @Command(aliases = "pickup", desc = "")
-    public void pickup(CommandResult result) {
-        result.get().add("handle pickup command");
+    public void pickup(CommandResult result, Item item) {
+        boolean removed = game.getCurrentRoom().getItems().remove(item);
+
+        if (!removed) {
+            result.get().add("<b>This room does not contain a " + item.getItem() + "</b>");
+            return;
+        }
+
+        result.get().add("Picked up " + item.getItem());
+        game.getInventory().add(item);
     }
 
     @Command(aliases = "kill", desc = "")

@@ -1,15 +1,19 @@
 package net.novucs.zombieserver;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.InvalidUsageException;
 import com.sk89q.intake.context.CommandLocals;
 import com.sk89q.intake.dispatcher.Dispatcher;
 import com.sk89q.intake.dispatcher.SimpleDispatcher;
+import com.sk89q.intake.parametric.ParameterException;
 import com.sk89q.intake.parametric.ParametricBuilder;
 import com.sk89q.intake.util.auth.AuthorizationException;
 import net.novucs.zombieserver.command.Bindings;
 import net.novucs.zombieserver.command.CommandExecutor;
 import net.novucs.zombieserver.command.CommandResult;
+import net.novucs.zombieserver.level.Item;
 import net.novucs.zombieserver.level.Room;
 import net.novucs.zombieserver.level.World;
 import net.novucs.zombieserver.level.generator.WorldGenerator;
@@ -27,6 +31,7 @@ public class GameManager {
 
     private final Dispatcher commandDispatcher;
     private final World world;
+    private final Multiset<Item> inventory = HashMultiset.create();
     private Room currentRoom;
     private GameState state = GameState.START;
 
@@ -44,7 +49,7 @@ public class GameManager {
 
         // Use the parametric builder to construct CommandCallable objects from annotations.
         ParametricBuilder builder = new ParametricBuilder();
-        builder.addBinding(new Bindings(), CommandResult.class);
+        builder.addBinding(new Bindings(), CommandResult.class, Item.class);
 
         // Create and register CommandCallable objects from the methods of each passed object.
         builder.registerMethodsAsCommands(commandDispatcher, new CommandExecutor(game));
@@ -58,6 +63,10 @@ public class GameManager {
 
     public World getWorld() {
         return world;
+    }
+
+    public Multiset<Item> getInventory() {
+        return inventory;
     }
 
     public Room getCurrentRoom() {
