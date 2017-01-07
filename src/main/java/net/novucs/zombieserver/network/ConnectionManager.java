@@ -3,6 +3,7 @@ package net.novucs.zombieserver.network;
 import net.novucs.zombieserver.GameManager;
 import net.novucs.zombieserver.GameState;
 import net.novucs.zombieserver.Main;
+import net.novucs.zombieserver.level.ZombieTimerState;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -43,34 +44,46 @@ public class ConnectionManager implements Runnable {
             }
 
             List<String> response = game.executeCommand(message);
-            sendScore(game.getScore());
             response.forEach(this::sendOutput);
+            sendScore(game.getScore());
 
             if (game.getState() == GameState.FINISHED) {
-                try {
-                    socket.stop((int) TimeUnit.SECONDS.toMillis(5));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-
+                closeServer();
                 break;
             }
 
-            if (game.enableTimer()) {
-                sendTimer(5);
-            } else if (game.disableTimer()) {
-                sendTimer(0);
-            }
+            updateZombieTimer();
         }
+    }
+
+    private void closeServer() {
+        try {
+            socket.stop((int) TimeUnit.SECONDS.toMillis(5));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private void updateZombieTimer() {
+        switch (game.getZombieTimerState()) {
+            case START:
+                sendZombieTimer(5);
+                break;
+            case STOP:
+                sendZombieTimer(0);
+                break;
+        }
+
+        game.setZombieTimerState(ZombieTimerState.UNCHANGED);
     }
 
     private void sendOutput(String text) {
         socket.send("{ \"type\" : \"output\", \"text\" : \"" + text + "\" }");
     }
 
-    private void sendTimer(int duration) {
+    private void sendZombieTimer(int duration) {
         socket.send("{ \"type\" : \"timer\", \"value\" : \"" + duration + "\" }");
     }
 

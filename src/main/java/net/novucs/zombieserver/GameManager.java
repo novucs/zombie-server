@@ -114,40 +114,6 @@ public class GameManager {
     }
 
     /**
-     * Gets if the zombie timer should be started on the client. This returns
-     * <tt>true</tt> when the player moves to a new room that contains zombies.
-     * After being is called, the server-side timer state is reset until the
-     * player enters another zombie-infested room.
-     *
-     * @return <tt>true</tt> if the client zombie timer should be enabled.
-     */
-    public boolean enableTimer() {
-        if (zombieTimerState == ZombieTimerState.START) {
-            zombieTimerState = ZombieTimerState.UNCHANGED;
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Gets if the zombie timer should be disabled on the client. This returns
-     * <tt>true</tt> when the player has just killed all zombies in the current
-     * room. After being called, the server-side state resets and future calls
-     * to this method return <tt>false</tt>.
-     *
-     * @return <tt>true</tt> if the client zombie timer should be disabled.
-     */
-    public boolean disableTimer() {
-        if (zombieTimerState == ZombieTimerState.STOP) {
-            zombieTimerState = ZombieTimerState.UNCHANGED;
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Process commands sent by the player.
      *
      * @param command the command to be processed.
