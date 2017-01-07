@@ -7,7 +7,6 @@ import com.sk89q.intake.InvalidUsageException;
 import com.sk89q.intake.context.CommandLocals;
 import com.sk89q.intake.dispatcher.Dispatcher;
 import com.sk89q.intake.dispatcher.SimpleDispatcher;
-import com.sk89q.intake.parametric.ParameterException;
 import com.sk89q.intake.parametric.ParametricBuilder;
 import com.sk89q.intake.util.auth.AuthorizationException;
 import net.novucs.zombieserver.command.Bindings;
@@ -16,6 +15,7 @@ import net.novucs.zombieserver.command.CommandResult;
 import net.novucs.zombieserver.level.Item;
 import net.novucs.zombieserver.level.Room;
 import net.novucs.zombieserver.level.World;
+import net.novucs.zombieserver.level.ZombieTimerState;
 import net.novucs.zombieserver.level.generator.WorldGenerator;
 import net.novucs.zombieserver.network.ConnectionManager;
 
@@ -35,6 +35,7 @@ public class GameManager {
     private int score;
     private Room currentRoom;
     private GameState state = GameState.START;
+    private ZombieTimerState zombieTimerState = ZombieTimerState.UNCHANGED;
 
     private GameManager(Dispatcher commandDispatcher, World world, Room currentRoom) {
         this.commandDispatcher = commandDispatcher;
@@ -107,6 +108,14 @@ public class GameManager {
         this.state = state;
     }
 
+    public ZombieTimerState getZombieTimerState() {
+        return zombieTimerState;
+    }
+
+    public void setZombieTimerState(ZombieTimerState zombieTimerState) {
+        this.zombieTimerState = zombieTimerState;
+    }
+
     /**
      * Gets if the zombie timer should be started on the client. This returns
      * <tt>true</tt> when the player moves to a new room that contains zombies.
@@ -116,6 +125,11 @@ public class GameManager {
      * @return <tt>true</tt> if the client zombie timer should be enabled.
      */
     public boolean enableTimer() {
+        if (zombieTimerState == ZombieTimerState.START) {
+            zombieTimerState = ZombieTimerState.UNCHANGED;
+            return true;
+        }
+
         return false;
     }
 
@@ -128,6 +142,11 @@ public class GameManager {
      * @return <tt>true</tt> if the client zombie timer should be disabled.
      */
     public boolean disableTimer() {
+        if (zombieTimerState == ZombieTimerState.STOP) {
+            zombieTimerState = ZombieTimerState.UNCHANGED;
+            return true;
+        }
+
         return false;
     }
 

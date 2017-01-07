@@ -4,12 +4,10 @@ import com.google.common.collect.Multiset;
 import com.sk89q.intake.Command;
 import net.novucs.zombieserver.GameManager;
 import net.novucs.zombieserver.GameState;
-import net.novucs.zombieserver.level.Entrance;
-import net.novucs.zombieserver.level.Item;
-import net.novucs.zombieserver.level.ItemType;
-import net.novucs.zombieserver.level.Room;
+import net.novucs.zombieserver.level.*;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CommandExecutor {
 
@@ -78,8 +76,36 @@ public class CommandExecutor {
     }
 
     @Command(aliases = "move", desc = "")
-    public void move(CommandResult result) {
-        result.get().add("handle move command");
+    public void move(CommandResult result, Direction direction) {
+        Optional<Entrance> entrance = getEntrance(direction, game.getCurrentRoom().getEntrances());
+
+        if (!entrance.isPresent()) {
+            result.get().add("No entrance exists");
+            return;
+        }
+
+        if (entrance.get().isLocked() && !game.getInventory().remove(Item.of(ItemType.KEY))) {
+            result.get().add("A key is needed to open entrance in " + direction.getShorthand());
+            return;
+        }
+
+        Room room = entrance.get().getTo();
+        game.setCurrentRoom(room);
+        result.get().add("You are now in " + room.getName());
+
+        if (room.getZombies() > 0) {
+            game.setZombieTimerState(ZombieTimerState.START);
+        }
+    }
+
+    private Optional<Entrance> getEntrance(Direction direction, List<Entrance> entrances) {
+        for (Entrance entrance : entrances) {
+            if (entrance.getDirection() == direction) {
+                return Optional.of(entrance);
+            }
+        }
+
+        return Optional.empty();
     }
 
     @Command(aliases = "pickup", desc = "")

@@ -5,6 +5,7 @@ import com.sk89q.intake.parametric.argument.ArgumentStack;
 import com.sk89q.intake.parametric.binding.BindingBehavior;
 import com.sk89q.intake.parametric.binding.BindingHelper;
 import com.sk89q.intake.parametric.binding.BindingMatch;
+import net.novucs.zombieserver.level.Direction;
 import net.novucs.zombieserver.level.Item;
 import net.novucs.zombieserver.level.ItemType;
 
@@ -33,5 +34,17 @@ public class Bindings extends BindingHelper {
         }
 
         return Item.of(itemType.get());
+    }
+
+    @BindingMatch(type = Direction.class, behavior = BindingBehavior.CONSUMES, consumedCount = 1)
+    public Direction getDirection(ArgumentStack context) throws ParameterException {
+        String shorthand = context.next();
+        Optional<Direction> direction = Direction.getByShorthand(shorthand);
+
+        if (!direction.isPresent()) {
+            throw new ParameterException("No direction of this type exists.");
+        }
+
+        return direction.get();
     }
 }
