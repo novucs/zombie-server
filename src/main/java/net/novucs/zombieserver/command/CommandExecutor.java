@@ -92,6 +92,12 @@ public class CommandExecutor {
 
         result.get().add("Picked up " + item.getItem());
         game.getInventory().add(item);
+
+        ItemType.get(item.getItem()).ifPresent(itemType -> {
+            if (itemType == ItemType.GOLD) {
+                game.incrementScore();
+            }
+        });
     }
 
     @Command(aliases = "kill", desc = "")

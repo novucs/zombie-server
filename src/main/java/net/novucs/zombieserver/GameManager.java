@@ -32,6 +32,7 @@ public class GameManager {
     private final Dispatcher commandDispatcher;
     private final World world;
     private final Multiset<Item> inventory = HashMultiset.create();
+    private int score;
     private Room currentRoom;
     private GameState state = GameState.START;
 
@@ -69,6 +70,23 @@ public class GameManager {
         return inventory;
     }
 
+    /**
+     * Gets the current score.
+     *
+     * @return the score.
+     */
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void incrementScore() {
+        this.score++;
+    }
+
     public Room getCurrentRoom() {
         return currentRoom;
     }
@@ -83,15 +101,6 @@ public class GameManager {
 
     public void setState(GameState state) {
         this.state = state;
-    }
-
-    /**
-     * Gets the current score.
-     *
-     * @return the score.
-     */
-    public int currentScore() {
-        return 0;
     }
 
     /**

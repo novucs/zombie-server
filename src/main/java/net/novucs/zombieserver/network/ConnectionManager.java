@@ -43,7 +43,7 @@ public class ConnectionManager implements Runnable {
             }
 
             List<String> response = game.executeCommand(message);
-            sendScore(game.currentScore());
+            sendScore(game.getScore());
             response.forEach(this::sendOutput);
 
             if (game.getState() == GameState.FINISHED) {
