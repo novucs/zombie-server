@@ -1,5 +1,7 @@
 package net.novucs.zombieserver.level.builder;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import net.novucs.zombieserver.level.Entrance;
 import net.novucs.zombieserver.level.Item;
 import net.novucs.zombieserver.level.Room;
@@ -12,7 +14,7 @@ public class RoomBuilder {
     private String name;
     private String description;
     private List<Entrance> entrances = new ArrayList<>();
-    private List<Item> items = new ArrayList<>();
+    private Multiset<Item> items = HashMultiset.create();
     private int zombies;
 
     public RoomBuilder name(String name) {
@@ -35,7 +37,7 @@ public class RoomBuilder {
         return this;
     }
 
-    public RoomBuilder items(List<Item> items) {
+    public RoomBuilder items(Multiset<Item> items) {
         this.items = items;
         return this;
     }
@@ -55,6 +57,6 @@ public class RoomBuilder {
             throw new IllegalStateException("Room has not been fully built");
         }
 
-        return new Room(name, description, new ArrayList<>(entrances), new ArrayList<>(items), zombies);
+        return new Room(name, description, new ArrayList<>(entrances), HashMultiset.create(items), zombies);
     }
 }

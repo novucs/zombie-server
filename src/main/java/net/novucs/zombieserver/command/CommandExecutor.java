@@ -128,7 +128,15 @@ public class CommandExecutor {
 
     @Command(aliases = "inventory", desc = "")
     public void inventory(CommandResult result) {
-        result.get().add("handle inventory command");
+        StringBuilder target = new StringBuilder();
+        target.append(game.getWorld().getInventoryHtml());
+
+        for (Item item : game.getInventory()) {
+            ItemType.get(item.getItem()).ifPresent(itemType ->
+                    target.append(itemType.getHtml()));
+        }
+
+        result.get().add(target.toString());
     }
 
     @Command(aliases = "blank", desc = "")

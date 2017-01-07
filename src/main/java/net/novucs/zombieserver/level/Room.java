@@ -1,5 +1,7 @@
 package net.novucs.zombieserver.level;
 
+import com.google.common.collect.Multiset;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -8,10 +10,10 @@ public class Room {
     private final String name;
     private final String description;
     private final List<Entrance> entrances;
-    private final List<Item> items;
+    private final Multiset<Item> items;
     private int zombies;
 
-    public Room(String name, String description, List<Entrance> entrances, List<Item> items, int zombies) {
+    public Room(String name, String description, List<Entrance> entrances, Multiset<Item> items, int zombies) {
         this.name = name;
         this.description = description;
         this.entrances = entrances;
@@ -31,7 +33,7 @@ public class Room {
         return entrances;
     }
 
-    public List<Item> getItems() {
+    public Multiset<Item> getItems() {
         return items;
     }
 
