@@ -23,7 +23,7 @@ public class WorldGenerator {
 
         RoomBuilder roomBuilder = new RoomBuilder();
         roomBuilder.name("Toilet");
-        roomBuilder.description("Level Toilet desc");
+        roomBuilder.description("You are in the toilet");
         roomBuilder.addItem(Item.of(ItemType.GOLD));
         roomBuilder.addItem(Item.of(ItemType.CHAINSAW));
         roomBuilder.addItem(Item.of(ItemType.DAISY));

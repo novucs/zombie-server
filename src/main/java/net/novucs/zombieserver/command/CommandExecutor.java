@@ -3,6 +3,12 @@ package net.novucs.zombieserver.command;
 import com.sk89q.intake.Command;
 import net.novucs.zombieserver.GameManager;
 import net.novucs.zombieserver.GameState;
+import net.novucs.zombieserver.level.Entrance;
+import net.novucs.zombieserver.level.Item;
+import net.novucs.zombieserver.level.ItemType;
+import net.novucs.zombieserver.level.Room;
+
+import java.util.List;
 
 public class CommandExecutor {
 
@@ -19,18 +25,55 @@ public class CommandExecutor {
             return;
         }
 
-        result.get().add("this is the message that gets displayed when game begins");
+        result.get().add(game.getWorld().getInfo());
         game.setState(GameState.RUNNING);
     }
 
     @Command(aliases = "info", desc = "")
     public void info(CommandResult result) {
-        result.get().add("handle info command");
+        result.get().add(game.getWorld().getInfo());
     }
 
     @Command(aliases = "look", desc = "")
     public void look(CommandResult result) {
-        result.get().add("handle look command");
+        Room room = game.getCurrentRoom();
+        result.get().add("<b>" + room.getDescription() + "</b>");
+
+        switch (room.getEntrances().size()) {
+            case 0:
+                break;
+            case 1:
+                String direction = room.getEntrances().get(0).getDirection().getShorthand();
+                result.get().add("There is an entrance to the " + direction);
+                break;
+            default:
+                result.get().add(getEntranceInfo(room.getEntrances()));
+        }
+
+        result.get().add(getItemInfo(room.getItems()));
+    }
+
+    private String getItemInfo(List<Item> items) {
+        StringBuilder target = new StringBuilder();
+
+        for (Item item : items) {
+            ItemType.get(item.getItem()).ifPresent(itemType ->
+                    target.append(itemType.getHtml()));
+        }
+
+        return target.toString();
+    }
+
+    private String getEntranceInfo(List<Entrance> entrances) {
+        StringBuilder target = new StringBuilder("There are entrances to the ");
+
+        for (int i = 0; i < entrances.size() - 1; i++) {
+            target.append(entrances.get(i).getDirection().getShorthand());
+            target.append(", ");
+        }
+
+        target.append(entrances.get(entrances.size() - 1).getDirection().getShorthand());
+        return target.toString();
     }
 
     @Command(aliases = "move", desc = "")

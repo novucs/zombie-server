@@ -52,6 +52,22 @@ public class GameManager {
         return game;
     }
 
+    public Dispatcher getCommandDispatcher() {
+        return commandDispatcher;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public Room getCurrentRoom() {
+        return currentRoom;
+    }
+
+    public void setCurrentRoom(Room currentRoom) {
+        this.currentRoom = currentRoom;
+    }
+
     public GameState getState() {
         return state;
     }

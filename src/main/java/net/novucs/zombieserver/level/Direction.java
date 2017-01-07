@@ -22,6 +22,10 @@ public enum Direction {
         this.shorthand = shorthand;
     }
 
+    public String getShorthand() {
+        return shorthand;
+    }
+
     public static Optional<Direction> getByShorthand(String shorthand) {
         return Optional.ofNullable(BY_SHORTHAND.get(shorthand));
     }
