@@ -9,6 +9,7 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.nio.channels.ClosedByInterruptException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
@@ -37,7 +38,9 @@ public class GameServerSocket extends WebSocketServer {
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        Main.getLogger().log(Level.SEVERE, "Error: ", ex);
+        if (!(ex instanceof ClosedByInterruptException)) {
+            Main.getLogger().log(Level.SEVERE, "Error: ", ex);
+        }
     }
 
     @Override

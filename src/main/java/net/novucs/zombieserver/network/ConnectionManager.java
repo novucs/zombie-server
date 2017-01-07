@@ -58,7 +58,7 @@ public class ConnectionManager implements Runnable {
 
     private void closeServer() {
         try {
-            socket.stop((int) TimeUnit.SECONDS.toMillis(5));
+            socket.stop();
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
