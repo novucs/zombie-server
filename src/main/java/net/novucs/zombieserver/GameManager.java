@@ -13,7 +13,6 @@ import net.novucs.zombieserver.command.Bindings;
 import net.novucs.zombieserver.command.CommandExecutor;
 import net.novucs.zombieserver.command.CommandResult;
 import net.novucs.zombieserver.level.*;
-import net.novucs.zombieserver.level.generator.WorldGenerator;
 import net.novucs.zombieserver.network.ConnectionManager;
 
 import java.util.regex.Pattern;
@@ -41,9 +40,7 @@ public class GameManager {
         this.currentRoom = currentRoom;
     }
 
-    public static GameManager create() {
-        WorldGenerator generator = new WorldGenerator();
-        World world = generator.generate();
+    public static GameManager create(World world) {
         Dispatcher commandDispatcher = new SimpleDispatcher();
         GameManager game = new GameManager(commandDispatcher, world, world.getStart());
 

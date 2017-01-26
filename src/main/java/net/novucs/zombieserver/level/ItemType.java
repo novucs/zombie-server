@@ -23,11 +23,13 @@ public class ItemType {
     }
 
     public static ItemType of(String name, String html) {
-        if (BY_NAME.containsKey(name)) {
-            throw new IllegalStateException("An item type by that name has already been created");
+        ItemType itemType = BY_NAME.get(name);
+
+        if (itemType != null) {
+            return itemType;
         }
 
-        ItemType itemType = new ItemType(name, html);
+        itemType = new ItemType(name, html);
         BY_NAME.put(name.toUpperCase(), itemType);
         return itemType;
     }
