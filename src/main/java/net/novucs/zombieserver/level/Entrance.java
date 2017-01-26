@@ -5,10 +5,10 @@ import java.util.Objects;
 public class Entrance {
 
     private final Direction direction;
-    private final Room to;
+    private final String to;
     private boolean locked;
 
-    public Entrance(Direction direction, Room to, boolean locked) {
+    public Entrance(Direction direction, String to, boolean locked) {
         this.direction = direction;
         this.to = to;
         this.locked = locked;
@@ -18,7 +18,7 @@ public class Entrance {
         return direction;
     }
 
-    public Room getTo() {
+    public String getTo() {
         return to;
     }
 

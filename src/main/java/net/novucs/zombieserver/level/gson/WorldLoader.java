@@ -3,7 +3,8 @@ package net.novucs.zombieserver.level.gson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.novucs.zombieserver.Main;
-import net.novucs.zombieserver.level.ItemType;
+import net.novucs.zombieserver.level.Entrance;
+import net.novucs.zombieserver.level.Item;
 import net.novucs.zombieserver.level.Room;
 import net.novucs.zombieserver.level.World;
 
@@ -28,8 +29,9 @@ public class WorldLoader {
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(World.class, new WorldDeserializer())
-                .registerTypeAdapter(ItemType.class, new ItemDeserializer())
+                .registerTypeAdapter(Item.class, new ItemDeserializer())
                 .registerTypeAdapter(Room.class, new RoomDeserializer())
+                .registerTypeAdapter(Entrance.class, new EntranceDeserializer())
                 .create();
 
         try {

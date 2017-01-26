@@ -17,68 +17,81 @@ public class WorldGenerator {
         worldBuilder.startHtml("let's play");
         worldBuilder.inventoryHtml("<img src=\\\"../assets/backpack.png\\\">");
 
-        worldBuilder.addItem(ItemType.GOLD);
-        worldBuilder.addItem(ItemType.KEY);
-        worldBuilder.addItem(ItemType.CHAINSAW);
-        worldBuilder.addItem(ItemType.DAISY);
+        worldBuilder.addItem(Item.GOLD);
+        worldBuilder.addItem(Item.KEY);
+        worldBuilder.addItem(Item.CHAINSAW);
+        worldBuilder.addItem(Item.DAISY);
 
+        // TOILET
         RoomBuilder roomBuilder = new RoomBuilder();
         roomBuilder.name("Toilet");
         roomBuilder.description("You are in the toilet");
         roomBuilder.items(HashMultiset.create());
-        roomBuilder.addItem(Item.of(ItemType.GOLD));
-        roomBuilder.addItem(Item.of(ItemType.CHAINSAW));
-        roomBuilder.addItem(Item.of(ItemType.DAISY));
+        roomBuilder.addItem(Item.GOLD);
+        roomBuilder.addItem(Item.CHAINSAW);
+        roomBuilder.addItem(Item.DAISY);
         roomBuilder.zombies(0);
-        Room toilet = roomBuilder.build();
-
-        roomBuilder.name("Exit");
-        roomBuilder.description("This is the final room...");
-        roomBuilder.items(HashMultiset.create());
-        roomBuilder.addItem(Item.of(ItemType.GOLD));
-        roomBuilder.zombies(1);
-        Room exit = roomBuilder.build();
-
-        roomBuilder.name("R3");
-        roomBuilder.description("Level R3");
-        roomBuilder.items(HashMultiset.create());
-        roomBuilder.addItem(Item.of(ItemType.KEY));
-        roomBuilder.addItem(Item.of(ItemType.CHAINSAW));
-        roomBuilder.zombies(2);
-        Room r3 = roomBuilder.build();
-
-        roomBuilder.name("R4");
-        roomBuilder.description("Level R4");
-        roomBuilder.items(HashMultiset.create());
-        roomBuilder.addItem(Item.of(ItemType.GOLD));
-        roomBuilder.addItem(Item.of(ItemType.CHAINSAW));
-        roomBuilder.zombies(0);
-        Room r4 = roomBuilder.build();
 
         EntranceBuilder entranceBuilder = new EntranceBuilder();
         entranceBuilder.direction(Direction.NORTH_EAST);
-        entranceBuilder.to(exit);
+        entranceBuilder.to("Exit");
         entranceBuilder.locked(true);
-        toilet.getEntrances().add(entranceBuilder.build());
+        roomBuilder.addEntrance(entranceBuilder.build());
 
         entranceBuilder.direction(Direction.SOUTH_EAST);
-        entranceBuilder.to(r3);
+        entranceBuilder.to("R3");
         entranceBuilder.locked(false);
-        toilet.getEntrances().add(entranceBuilder.build());
+        roomBuilder.addEntrance(entranceBuilder.build());
 
         entranceBuilder.direction(Direction.SOUTH_WEST);
-        entranceBuilder.to(r4);
-        toilet.getEntrances().add(entranceBuilder.build());
+        entranceBuilder.to("R4");
+        roomBuilder.addEntrance(entranceBuilder.build());
+
+        Room toilet = roomBuilder.build();
+        worldBuilder.addRoom(toilet);
+
+        // EXIT
+        roomBuilder.name("Exit");
+        roomBuilder.description("This is the final room...");
+        roomBuilder.items(HashMultiset.create());
+        roomBuilder.addItem(Item.GOLD);
+        roomBuilder.zombies(1);
+
+        Room exit = roomBuilder.build();
+        worldBuilder.addRoom(exit);
+
+        // R3
+        roomBuilder.name("R3");
+        roomBuilder.description("Level R3");
+        roomBuilder.items(HashMultiset.create());
+        roomBuilder.addItem(Item.KEY);
+        roomBuilder.addItem(Item.CHAINSAW);
+        roomBuilder.zombies(2);
 
         entranceBuilder.direction(Direction.NORTH_WEST);
-        entranceBuilder.to(toilet);
-        r3.getEntrances().add(entranceBuilder.build());
+        entranceBuilder.to("Toilet");
+        roomBuilder.addEntrance(entranceBuilder.build());
+
+        Room r3 = roomBuilder.build();
+        worldBuilder.addRoom(r3);
+
+        // R4
+        roomBuilder.name("R4");
+        roomBuilder.description("Level R4");
+        roomBuilder.items(HashMultiset.create());
+        roomBuilder.addItem(Item.GOLD);
+        roomBuilder.addItem(Item.CHAINSAW);
+        roomBuilder.zombies(0);
 
         entranceBuilder.direction(Direction.NORTH_EAST);
-        r4.getEntrances().add(entranceBuilder.build());
+        roomBuilder.addEntrance(entranceBuilder.build());
+
+        Room r4 = roomBuilder.build();
+        worldBuilder.addRoom(r4);
 
         worldBuilder.start(toilet);
         worldBuilder.finish(exit);
+
         return worldBuilder.build();
     }
 }

@@ -6,8 +6,8 @@ import net.novucs.zombieserver.GameManager;
 import net.novucs.zombieserver.GameState;
 import net.novucs.zombieserver.level.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Collection;
+import java.util.StringJoiner;
 
 public class CommandExecutor {
 
@@ -42,11 +42,11 @@ public class CommandExecutor {
             case 0:
                 break;
             case 1:
-                String direction = room.getEntrances().get(0).getDirection().getShorthand();
+                String direction = room.getEntrances().values().iterator().next().getDirection().getShorthand();
                 result.add("There is an entrance to the " + direction);
                 break;
             default:
-                result.add(getEntranceInfo(room.getEntrances()));
+                result.add(getEntranceInfo(room.getEntrances().values()));
         }
 
         result.add(getItemInfo(room.getItems()));
@@ -56,40 +56,37 @@ public class CommandExecutor {
         StringBuilder target = new StringBuilder();
 
         for (Item item : items) {
-            ItemType.get(item.getItem()).ifPresent(itemType ->
-                    target.append(itemType.getHtml()));
+            target.append(item.getHtml());
         }
 
         return target.toString();
     }
 
-    private String getEntranceInfo(List<Entrance> entrances) {
-        StringBuilder target = new StringBuilder("There are entrances to the ");
+    private String getEntranceInfo(Collection<Entrance> entrances) {
+        StringJoiner target = new StringJoiner(", ");
 
-        for (int i = 0; i < entrances.size() - 1; i++) {
-            target.append(entrances.get(i).getDirection().getShorthand());
-            target.append(", ");
+        for (Entrance entrance : entrances) {
+            target.add(entrance.getDirection().getShorthand());
         }
 
-        target.append(entrances.get(entrances.size() - 1).getDirection().getShorthand());
-        return target.toString();
+        return "There are entrances to the " + target.toString();
     }
 
     @Command(aliases = "move", desc = "")
     public void move(CommandResult result, Direction direction) {
-        Optional<Entrance> entrance = getEntrance(direction, game.getCurrentRoom().getEntrances());
+        Entrance entrance = game.getCurrentRoom().getEntrances().get(direction);
 
-        if (!entrance.isPresent()) {
+        if (entrance == null) {
             result.add("No entrance exists");
             return;
         }
 
-        if (entrance.get().isLocked() && !game.getInventory().remove(Item.of(ItemType.KEY))) {
+        if (entrance.isLocked() && !game.getInventory().remove(Item.KEY)) {
             result.add("A key is needed to open entrance in " + direction.getShorthand());
             return;
         }
 
-        Room room = entrance.get().getTo();
+        Room room = game.getWorld().getRooms().get(entrance.getTo());
         game.setCurrentRoom(room);
         result.add("You are now in " + room.getName());
 
@@ -98,33 +95,21 @@ public class CommandExecutor {
         }
     }
 
-    private Optional<Entrance> getEntrance(Direction direction, List<Entrance> entrances) {
-        for (Entrance entrance : entrances) {
-            if (entrance.getDirection() == direction) {
-                return Optional.of(entrance);
-            }
-        }
-
-        return Optional.empty();
-    }
-
     @Command(aliases = "pickup", desc = "")
     public void pickup(CommandResult result, Item item) {
         boolean removed = game.getCurrentRoom().getItems().remove(item);
 
         if (!removed) {
-            result.add("<b>This room does not contain a " + item.getItem() + "</b>");
+            result.add("<b>This room does not contain a " + item.getName() + "</b>");
             return;
         }
 
-        result.add("Picked up " + item.getItem());
+        result.add("Picked up " + item.getName());
         game.getInventory().add(item);
 
-        ItemType.get(item.getItem()).ifPresent(itemType -> {
-            if (itemType == ItemType.GOLD) {
-                game.incrementScore();
-            }
-        });
+        if (item == Item.GOLD) {
+            game.incrementScore();
+        }
     }
 
     @Command(aliases = "kill", desc = "")
@@ -136,8 +121,8 @@ public class CommandExecutor {
             return;
         }
 
-        if (!game.getInventory().remove(Item.of(ItemType.CHAINSAW)) &&
-                !game.getInventory().remove(Item.of(ItemType.DAISY))) {
+        if (!game.getInventory().remove(Item.CHAINSAW) &&
+                !game.getInventory().remove(Item.DAISY)) {
             result.add("Unable to kill zombie, no weapons available");
             return;
         }
@@ -163,11 +148,9 @@ public class CommandExecutor {
         result.add("Item dropped");
         game.getCurrentRoom().getItems().add(item);
 
-        ItemType.get(item.getItem()).ifPresent(itemType -> {
-            if (itemType == ItemType.GOLD) {
-                game.decrementScore();
-            }
-        });
+        if (item == Item.GOLD) {
+            game.decrementScore();
+        }
     }
 
     @Command(aliases = "timerexpired", desc = "")
@@ -193,8 +176,7 @@ public class CommandExecutor {
         target.append(game.getWorld().getInventoryHtml());
 
         for (Item item : game.getInventory()) {
-            ItemType.get(item.getItem()).ifPresent(itemType ->
-                    target.append(itemType.getHtml()));
+            target.append(item.getHtml());
         }
 
         result.add(target.toString());

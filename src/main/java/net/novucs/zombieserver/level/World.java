@@ -1,6 +1,7 @@
 package net.novucs.zombieserver.level;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 import java.util.Objects;
 
@@ -9,13 +10,13 @@ public class World {
     private final String info;
     private final String startHtml;
     private final String inventoryHtml;
-    private final ImmutableList<ItemType> items;
-    private final ImmutableList<Room> rooms;
+    private final ImmutableSet<Item> items;
+    private final ImmutableMap<String, Room> rooms;
     private final Room start;
     private final Room finish;
 
-    public World(String info, String startHtml, String inventoryHtml, ImmutableList<ItemType> items,
-                 ImmutableList<Room> rooms, Room start, Room finish) {
+    public World(String info, String startHtml, String inventoryHtml, ImmutableSet<Item> items,
+                 ImmutableMap<String, Room> rooms, Room start, Room finish) {
         this.info = info;
         this.startHtml = startHtml;
         this.inventoryHtml = inventoryHtml;
@@ -37,11 +38,11 @@ public class World {
         return inventoryHtml;
     }
 
-    public ImmutableList<ItemType> getItems() {
+    public ImmutableSet<Item> getItems() {
         return items;
     }
 
-    public ImmutableList<Room> getRooms() {
+    public ImmutableMap<String, Room> getRooms() {
         return rooms;
     }
 

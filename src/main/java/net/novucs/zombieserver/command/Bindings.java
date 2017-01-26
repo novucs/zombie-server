@@ -7,7 +7,6 @@ import com.sk89q.intake.parametric.binding.BindingHelper;
 import com.sk89q.intake.parametric.binding.BindingMatch;
 import net.novucs.zombieserver.level.Direction;
 import net.novucs.zombieserver.level.Item;
-import net.novucs.zombieserver.level.ItemType;
 
 import java.util.Optional;
 
@@ -27,13 +26,13 @@ public class Bindings extends BindingHelper {
     @BindingMatch(type = Item.class, behavior = BindingBehavior.CONSUMES, consumedCount = 1)
     public Item getItem(ArgumentStack context) throws ParameterException {
         String itemName = context.next();
-        Optional<ItemType> itemType = ItemType.get(itemName);
+        Optional<Item> itemType = Item.get(itemName);
 
         if (!itemType.isPresent()) {
             throw new ParameterException("No item of this type exists.");
         }
 
-        return Item.of(itemType.get());
+        return itemType.get();
     }
 
     @BindingMatch(type = Direction.class, behavior = BindingBehavior.CONSUMES, consumedCount = 1)
