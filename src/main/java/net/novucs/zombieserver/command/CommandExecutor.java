@@ -81,9 +81,13 @@ public class CommandExecutor {
             return;
         }
 
-        if (entrance.isLocked() && !game.getInventory().remove(Item.KEY)) {
-            result.add("A key is needed to open entrance in " + direction.getShorthand());
-            return;
+        if (entrance.isLocked()) {
+            if (!game.getInventory().remove(Item.KEY)) {
+                result.add("A key is needed to open entrance in " + direction.getShorthand());
+                return;
+            }
+
+            entrance.setLocked(false);
         }
 
         Room room = game.getWorld().getRooms().get(entrance.getTo());
