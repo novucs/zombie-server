@@ -23,6 +23,7 @@ public class Item {
     }
 
     public static Item of(String name, String html) {
+        name = name.toUpperCase();
         Item item = BY_NAME.get(name);
 
         if (item != null) {
@@ -30,7 +31,7 @@ public class Item {
         }
 
         item = new Item(name, html);
-        BY_NAME.put(name.toUpperCase(), item);
+        BY_NAME.put(name, item);
         return item;
     }
 
