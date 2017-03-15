@@ -22,6 +22,8 @@ import java.util.regex.Pattern;
  * to use.
  *
  * @author William Randall
+ * @author Gareth Perry
+ * @author Chris Taylor
  */
 public class GameManager {
 
@@ -40,6 +42,12 @@ public class GameManager {
         this.currentRoom = currentRoom;
     }
 
+    /**
+     * Creates a new {@link GameManager}.
+     *
+     * @param world the world to use in this game.
+     * @return the newly created {@link GameManager}.
+     */
     public static GameManager create(World world) {
         Dispatcher commandDispatcher = new SimpleDispatcher();
         GameManager game = new GameManager(commandDispatcher, world, world.getStart());
@@ -54,14 +62,29 @@ public class GameManager {
         return game;
     }
 
+    /**
+     * Gets the command dispatcher.
+     *
+     * @return the dispatcher.
+     */
     public Dispatcher getCommandDispatcher() {
         return commandDispatcher;
     }
 
+    /**
+     * Gets the world.
+     *
+     * @return the world.
+     */
     public World getWorld() {
         return world;
     }
 
+    /**
+     * Gets the players current inventory.
+     *
+     * @return the inventory.
+     */
     public Multiset<Item> getInventory() {
         return inventory;
     }
@@ -75,38 +98,79 @@ public class GameManager {
         return score;
     }
 
+    /**
+     * Sets the current score.
+     *
+     * @param score the score.
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /**
+     * Increments the current score.
+     */
     public void incrementScore() {
         this.score++;
     }
 
+    /**
+     * Decrements the current score.
+     */
     public void decrementScore() {
         this.score--;
     }
 
+    /**
+     * Gets the current room.
+     *
+     * @return the room the player is currently inside.
+     */
     public Room getCurrentRoom() {
         return currentRoom;
     }
 
+    /**
+     * Sets the current room.
+     *
+     * @param currentRoom the new room the player has moved to.
+     */
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
     }
 
+    /**
+     * Gets the game state.
+     *
+     * @return the game state.
+     */
     public GameState getState() {
         return state;
     }
 
+    /**
+     * Sets the game state.
+     *
+     * @param state the game state.
+     */
     public void setState(GameState state) {
         this.state = state;
     }
 
+    /**
+     * Gets the zombie timer state.
+     *
+     * @return the zombie timer state.
+     */
     public ZombieTimerState getZombieTimerState() {
         return zombieTimerState;
     }
 
+    /**
+     * Sets the zombie timer state.
+     *
+     * @param zombieTimerState the zombie timer state.
+     */
     public void setZombieTimerState(ZombieTimerState zombieTimerState) {
         this.zombieTimerState = zombieTimerState;
     }

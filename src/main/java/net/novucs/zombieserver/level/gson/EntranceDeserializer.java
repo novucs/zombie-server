@@ -7,6 +7,13 @@ import net.novucs.zombieserver.level.builder.EntranceBuilder;
 
 import java.lang.reflect.Type;
 
+/**
+ * Deserialize an {@link Entrance} from JSON.
+ *
+ * @author William Randall
+ * @author Gareth Perry
+ * @author Chris Taylor
+ */
 public class EntranceDeserializer implements JsonDeserializer<Entrance> {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")

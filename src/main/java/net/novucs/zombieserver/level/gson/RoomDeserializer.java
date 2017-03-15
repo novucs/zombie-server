@@ -8,6 +8,13 @@ import net.novucs.zombieserver.level.builder.RoomBuilder;
 
 import java.lang.reflect.Type;
 
+/**
+ * Deserialize a {@link Room} from JSON.
+ *
+ * @author William Randall
+ * @author Gareth Perry
+ * @author Chris Taylor
+ */
 public class RoomDeserializer implements JsonDeserializer<Room> {
 
     @Override

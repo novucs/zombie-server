@@ -11,6 +11,14 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The main zombie game server class, this is where all game initialization
+ * occurs.
+ *
+ * @author William Randall
+ * @author Gareth Perry
+ * @author Chris Taylor
+ */
 public class Main {
 
     private static final String DEFAULT_WORLD = "world.json";
@@ -19,6 +27,8 @@ public class Main {
     private static final int PORT = 8085;
 
     /**
+     * The program start point.
+     *
      * @param args the command line arguments.
      */
     public static void main(String[] args) {
@@ -57,6 +67,11 @@ public class Main {
         connectionManager.initialize();
     }
 
+    /**
+     * Gets the game server logger.
+     *
+     * @return the logger.
+     */
     public static Logger getLogger() {
         return LOGGER;
     }

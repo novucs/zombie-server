@@ -8,6 +8,13 @@ import net.novucs.zombieserver.level.builder.WorldBuilder;
 
 import java.lang.reflect.Type;
 
+/**
+ * Deserialize a {@link World} from JSON.
+ *
+ * @author William Randall
+ * @author Gareth Perry
+ * @author Chris Taylor
+ */
 public class WorldDeserializer implements JsonDeserializer<World> {
 
     @Override

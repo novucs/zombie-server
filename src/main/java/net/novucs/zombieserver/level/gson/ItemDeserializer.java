@@ -5,6 +5,13 @@ import net.novucs.zombieserver.level.Item;
 
 import java.lang.reflect.Type;
 
+/**
+ * Deserialize an {@link Item} from JSON.
+ *
+ * @author William Randall
+ * @author Gareth Perry
+ * @author Chris Taylor
+ */
 public class ItemDeserializer implements JsonDeserializer<Item> {
 
     @Override

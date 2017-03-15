@@ -6,6 +6,15 @@ import net.novucs.zombieserver.level.builder.EntranceBuilder;
 import net.novucs.zombieserver.level.builder.RoomBuilder;
 import net.novucs.zombieserver.level.builder.WorldBuilder;
 
+/**
+ * Randomly generates a new world. (Original intention)
+ *
+ * Currently this simply returns the default world provided by Ben.
+ *
+ * @author William Randall
+ * @author Gareth Perry
+ * @author Chris Taylor
+ */
 public class WorldGenerator {
 
     public World generate() {

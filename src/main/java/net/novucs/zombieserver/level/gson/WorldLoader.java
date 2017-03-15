@@ -16,8 +16,21 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.logging.Level;
 
+/**
+ * Utility for loading a {@link World} from file.
+ *
+ * @author William Randall
+ * @author Gareth Perry
+ * @author Chris Taylor
+ */
 public class WorldLoader {
 
+    /**
+     * Loads the world from a given resource.
+     *
+     * @param resource the resource to open.
+     * @return the loaded world or {@code Optional#empty()} if invalid.
+     */
     public Optional<World> load(String resource) {
         Optional<InputStream> inputStream = getResource(resource);
 
@@ -42,11 +55,24 @@ public class WorldLoader {
         }
     }
 
+    /**
+     * Reads an {@link InputStream} fully into a single {@link String}.
+     *
+     * @param inputStream the stream to read in.
+     * @return the stream contents as a {@link String}.
+     */
     private String readFully(InputStream inputStream) {
         Scanner scanner = new Scanner(inputStream);
         return scanner.useDelimiter("\0").next();
     }
 
+    /**
+     * Gets a resource, either as a file in the same directory as the runnable
+     * or from within the JAR resource itself.
+     *
+     * @param resource the resource to read.
+     * @return the stream of the found resource or {@code Optional#empty()}.
+     */
     private Optional<InputStream> getResource(String resource) {
         try {
             return Optional.of(new FileInputStream(new File(resource)));

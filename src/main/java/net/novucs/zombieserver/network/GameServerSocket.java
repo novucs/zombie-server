@@ -14,14 +14,32 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
+/**
+ * The server Socket.
+ *
+ * @author William Randall
+ * @author Gareth Perry
+ * @author Chris Taylor
+ */
 public class GameServerSocket extends WebSocketServer {
 
     private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
 
+    /**
+     * Constructs a new game server socket.
+     *
+     * @param address the address to bind to.
+     * @param port    the port to bind to.
+     */
     public GameServerSocket(InetAddress address, int port) {
         super(new InetSocketAddress(address, port));
     }
 
+    /**
+     * Gets the message queue.
+     *
+     * @return the message queue.
+     */
     public BlockingQueue<String> getMessageQueue() {
         return messageQueue;
     }

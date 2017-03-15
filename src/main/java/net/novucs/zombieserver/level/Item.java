@@ -5,6 +5,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Represents an in game item.
+ *
+ * @author William Randall
+ * @author Gareth Perry
+ * @author Chris Taylor
+ */
 public class Item {
 
     private static final Map<String, Item> BY_NAME = new HashMap<>();
@@ -17,11 +24,24 @@ public class Item {
     private final String name;
     private final String html;
 
+    /**
+     * Constructs a new item.
+     *
+     * @param name the item name.
+     * @param html the item html.
+     */
     private Item(String name, String html) {
         this.name = name;
         this.html = html;
     }
 
+    /**
+     * Factory method for creating a new item if none already exists.
+     *
+     * @param name the item name.
+     * @param html the item html.
+     * @return the item either found or created.
+     */
     public static Item of(String name, String html) {
         name = name.toUpperCase();
         Item item = BY_NAME.get(name);
@@ -35,14 +55,30 @@ public class Item {
         return item;
     }
 
+    /**
+     * Gets an item if it exists.
+     *
+     * @param name the item to search for.
+     * @returnthe item found, or {@code Optional#empty()}.
+     */
     public static Optional<Item> get(String name) {
         return Optional.ofNullable(BY_NAME.getOrDefault(name.toUpperCase(), null));
     }
 
+    /**
+     * Gets the name of the item.
+     *
+     * @return the name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the html displayed for the item.
+     *
+     * @return the html.
+     */
     public String getHtml() {
         return html;
     }

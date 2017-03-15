@@ -5,6 +5,13 @@ import com.google.common.collect.ImmutableSet;
 
 import java.util.Objects;
 
+/**
+ * Represents the in game world.
+ *
+ * @author William Randall
+ * @author Gareth Perry
+ * @author Chris Taylor
+ */
 public class World {
 
     private final String info;
@@ -15,6 +22,17 @@ public class World {
     private final Room start;
     private final Room finish;
 
+    /**
+     * Constructs a new world.
+     *
+     * @param info          the message to be sent on the info command.
+     * @param startHtml     the message to be sent when the player first logs in.
+     * @param inventoryHtml the inventory icon.
+     * @param items         all item types this world contains.
+     * @param rooms         all world rooms.
+     * @param start         the room the player should start in.
+     * @param finish        the room the player should finish in.
+     */
     public World(String info, String startHtml, String inventoryHtml, ImmutableSet<Item> items,
                  ImmutableMap<String, Room> rooms, Room start, Room finish) {
         this.info = info;
@@ -26,30 +44,65 @@ public class World {
         this.finish = finish;
     }
 
+    /**
+     * Gets the world information message.
+     *
+     * @return the information message.
+     */
     public String getInfo() {
         return info;
     }
 
+    /**
+     * Gets the start message.
+     *
+     * @return the start message.
+     */
     public String getStartHtml() {
         return startHtml;
     }
 
+    /**
+     * Gets the inventory icon.
+     *
+     * @return the inventory icon.
+     */
     public String getInventoryHtml() {
         return inventoryHtml;
     }
 
+    /**
+     * Gets all item types in this world.
+     *
+     * @return the available items.
+     */
     public ImmutableSet<Item> getItems() {
         return items;
     }
 
+    /**
+     * Gets all worlds in this world.
+     *
+     * @return the rooms.
+     */
     public ImmutableMap<String, Room> getRooms() {
         return rooms;
     }
 
+    /**
+     * Gets the room the player should start in.
+     *
+     * @return the start room.
+     */
     public Room getStart() {
         return start;
     }
 
+    /**
+     * Gets the room the player should finish in.
+     *
+     * @return the finish room.
+     */
     public Room getFinish() {
         return finish;
     }

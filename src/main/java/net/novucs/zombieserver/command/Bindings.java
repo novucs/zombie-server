@@ -10,6 +10,14 @@ import net.novucs.zombieserver.level.Item;
 
 import java.util.Optional;
 
+/**
+ * All argument bindings, allows Intake to consume arguments supplied by the
+ * player in their command and returns their relevant data type.
+ *
+ * @author William Randall
+ * @author Gareth Perry
+ * @author Chris Taylor
+ */
 public class Bindings extends BindingHelper {
 
     @BindingMatch(type = CommandResult.class, behavior = BindingBehavior.PROVIDES)
