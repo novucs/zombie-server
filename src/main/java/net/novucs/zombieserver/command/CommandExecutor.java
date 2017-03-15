@@ -115,12 +115,16 @@ public class CommandExecutor {
         }
 
         Room room = game.getWorld().getRooms().get(entrance.getTo());
+        int previousZombieCount = game.getCurrentRoom().getZombies();
+        game.getCurrentRoom().setZombies(0);
         game.setCurrentRoom(room);
         result.add("You are now in " + room.getName());
 
-        if (room.getZombies() > 0) {
+        if (previousZombieCount == 0 && room.getZombies() > 0) {
             game.setZombieTimerState(ZombieTimerState.START);
         }
+
+        room.setZombies(room.getZombies() + previousZombieCount);
     }
 
     @Command(aliases = "pickup", desc = "Picks up an item in the current room")
